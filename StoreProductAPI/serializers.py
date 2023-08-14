@@ -41,7 +41,7 @@ class SingleProductSerializer(serializers.ModelSerializer):
     images = ImageSerializer(many=True)
     class Meta:
         model = Product
-        fields = ['id', 'name', 'stock', 'price', 'shipping', 'colors', 'category', 'images', 'reviews', 'stars', 'description', 'company']
+        fields = ['id', 'name', 'stock', 'price', 'shipping', 'colors', 'category', 'images', 'featured', 'reviews', 'stars', 'description', 'company']
     
     def create(self, validated_data):
         # Extract the colors and images data
@@ -97,12 +97,11 @@ class SingleProductSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     colors = serializers.SerializerMethodField()
     image = serializers.SerializerMethodField(source="images")
-    
     # colors = ColorSerializer(many=True)
     # images = SingleImageSerializer(many=True)
     class Meta:
         model = Product
-        fields = ['id', 'name', 'price', 'image', 'colors', 'company', 'description', 'category',  'shipping']
+        fields = ['id', 'name', 'price', 'image', 'featured',  'colors', 'company', 'description', 'category',  'shipping']
     
     def get_image(self, obj):
         images = obj.images.all()
@@ -112,3 +111,10 @@ class ProductSerializer(serializers.ModelSerializer):
     
     def get_colors(self, obj):
         return [color.value for color in obj.colors.all()]
+    
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        if not instance.featured:
+            data.pop('featured')
+        return data        
+    

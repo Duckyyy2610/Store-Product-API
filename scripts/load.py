@@ -79,11 +79,16 @@ def run():
                 type='image/jpeg', 
                 thumbnail=thumbnail
             )
-           
+            
+            featured_value = False
+            if data['name'] in ['entertainment center', 'high-back bench', 'modern bookshelf']:
+                featured_value = True
+
             product, created =Product.objects.get_or_create(
                 name=data['name'],
                 stock=random.randint(1, 30),
                 price=data['price'],
+                featured=featured_value,
                 category=data['category'],
                 reviews=random.randint(10, 10000),
                 stars=random.randint(1, 5),

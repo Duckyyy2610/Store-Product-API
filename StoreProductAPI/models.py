@@ -42,6 +42,7 @@ class Product(models.Model):
     images = models.ManyToManyField(Image, through='ProductImage')
     reviews = models.SmallIntegerField()
     stars = models.SmallIntegerField()
+    featured = models.BooleanField(default=False)
     description = models.TextField(null=True)
     company = models.CharField(max_length=50)
 
