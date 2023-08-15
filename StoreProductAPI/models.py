@@ -2,7 +2,7 @@ from django.db import models
 import uuid
 # Create your models here.
 class Color(models.Model):
-    value = models.CharField(max_length=10, unique=True)
+    value = models.CharField(max_length=10)
 
     def __str__(self):
         return self.value
@@ -37,8 +37,8 @@ class Product(models.Model):
     stock = models.IntegerField(null=False)
     price = models.DecimalField(max_digits=9, decimal_places=2)
     shipping = models.BooleanField(default=False)
-    colors = models.ManyToManyField(Color, through='ProductColor')
     category = models.CharField(max_length=100)
+    colors = models.ManyToManyField(Color, through='ProductColor')
     images = models.ManyToManyField(Image, through='ProductImage')
     reviews = models.SmallIntegerField()
     stars = models.SmallIntegerField()

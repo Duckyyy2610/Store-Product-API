@@ -5,8 +5,91 @@ import json
 from django.db import connection
 from PIL import Image as img
 from io import BytesIO
+from rest_framework.response import Response
 from StoreProductAPI.models import Color, ThumbnailSize, Thumbnail, Image, Product, ProductColor, ProductImage
 
+def create_image(image_data):
+    width_large, height_large = get_image_size(image_data['url'])
+        
+    thumbnail_small, created = ThumbnailSize.objects.get_or_create(
+        url=image_data['url'], 
+        width=random.randint(50, 60),
+        height=random.randint(30, 40)
+    )
+
+    thumbnail_large, created = ThumbnailSize.objects.get_or_create(
+        url=image_data['url'],
+        width=width_large, 
+        height=height_large
+    )
+
+    thumbnail_full, created = ThumbnailSize.objects.get_or_create(
+        url=image_data['url'], 
+        width=3000,
+        height=3000
+    )
+
+    thumbnail, _ = Thumbnail.objects.get_or_create(
+        small=thumbnail_small,
+        large=thumbnail_large,
+        full=thumbnail_full
+    )
+
+    image_obj, created = Image.objects.get_or_create(
+        thumbnail=thumbnail,
+        width=image_data['width'],
+        height=image_data['height'],
+        url=image_data['url'],
+        filename=image_data['filename'],
+        size=image_data['size'],
+        type=image_data['type'],
+    )
+    return image_obj
+
+def update_product(product, data, method):
+    colors_data = data.pop("colors", [])
+    images_data = data.pop("images", [])
+        
+    #  freq_color = dict()
+    # freq_image = dict()
+    # [freq_color.update({str(obj).split()[-1]: 1}) for obj in product.productcolor_set.all()] 
+    # [freq_color.update({str(obj).split()[-1]: 1}) for obj in product.productcolor_set.all()] 
+    
+    product.colors.clear()
+    for color_data in colors_data:
+        color_obj, created = Color.objects.get_or_create(**color_data)
+        product.colors.add(color_obj)
+
+    product.images.clear()
+    for image_data in images_data:
+        image_obj = create_image(image_data)
+        product.images.add(image_obj)
+
+    serialized_product_update = method(product, data=data, partial=True)
+    serialized_product_update.is_valid(raise_exception=True)
+    serialized_product_update.save()
+    return serialized_product_update
+
+def post_product(data, method):
+    colors_data = data.pop('colors', [])
+    images_data = data.pop('images', [])
+    
+    product = Product.objects.create(**data)
+
+    
+    for color_data in colors_data:
+        color_ = Color.objects.get_or_create(**color_data)[0]
+        ProductColor.objects.create(product=product, color=color_)
+
+    
+    for image_data in images_data:
+        image_ = create_image(image_data)
+        ProductImage.objects.create(product=product, image=image_)
+    
+    serialized_product = method(data=data)
+    serialized_product.is_valid(raise_exception=True)
+    serialized_product.save()
+    return serialized_product
 
 def get_image_size(url):
     try:
@@ -101,7 +184,7 @@ def run():
                 product_color, created = ProductColor.objects.get_or_create(color=color_, product=product)
             
             product_color, created = ProductImage.objects.get_or_create(image=image_, product=product)
-            for i in range(random.randint(1, len(image_url_arr))):
+            for i in range(4):
                 random_url_image = random.choice(image_url_arr)
                 print(random_url_image)
                 image_, created = Image.objects.get_or_create(
@@ -121,163 +204,165 @@ def run():
 
 
 # The complete JSON data
-    # json_data = '''
-    #     {
-    #     "id": "rec1Ntk7siEEW9ha1",
-    #     "stock": 0,
-    #     "price": 23999,
-    #     "shipping": true,
-    #     "colors": [
-    #         "#0000ff",
-    #         "#000"
-    #     ],
-    #     "category": "bedroom",
-    #     "images": [
-    #         {
-    #             "id": "attub6EG88kJKuYs8",
-    #             "width": 1000,
-    #             "height": 667,
-    #             "url": "https://www.course-api.com/images/store/product-6.jpeg",
-    #             "filename": "product-4.jpeg",
-    #             "size": 49641,
-    #             "type": "image/jpeg",
-    #             "thumbnails": {
-    #                 "small": {
-    #                     "url": "https://www.course-api.com/images/store/product-6.jpeg",
-    #                     "width": 54,
-    #                     "height": 36
-    #                 },
-    #                 "large": {
-    #                     "url": "https://www.course-api.com/images/store/product-6.jpeg",
-    #                     "width": 768,
-    #                     "height": 512
-    #                 },
-    #                 "full": {
-    #                     "url": "https://www.course-api.com/images/store/product-6.jpeg",
-    #                     "width": 3000,
-    #                     "height": 3000
-    #                 }
-    #             }
-    #         },
-    #         {
-    #             "id": "attaeT2Dex98o2jfW",
-    #             "width": 1000,
-    #             "height": 667,
-    #             "url": "https://www.course-api.com/images/store/extra-product-1.jpeg",
-    #             "filename": "extra-1.jpeg",
-    #             "size": 102108,
-    #             "type": "image/jpeg",
-    #             "thumbnails": {
-    #                 "small": {
-    #                     "url": "https://www.course-api.com/images/store/extra-product-1.jpeg",
-    #                     "width": 54,
-    #                     "height": 36
-    #                 },
-    #                 "large": {
-    #                     "url": "https://www.course-api.com/images/store/extra-product-1.jpeg",
-    #                     "width": 768,
-    #                     "height": 512
-    #                 },
-    #                 "full": {
-    #                     "url": "https://www.course-api.com/images/store/extra-product-1.jpeg",
-    #                     "width": 3000,
-    #                     "height": 3000
-    #                 }
-    #             }
-    #         },
-    #         {
-    #             "id": "attWsZasaaRD1P7mm",
-    #             "width": 1000,
-    #             "height": 714,
-    #             "url": "https://www.course-api.com/images/store/extra-product-2.jpeg",
-    #             "filename": "extra-2.jpeg",
-    #             "size": 84418,
-    #             "type": "image/jpeg",
-    #             "thumbnails": {
-    #                 "small": {
-    #                     "url": "https://www.course-api.com/images/store/extra-product-2.jpeg",
-    #                     "width": 50,
-    #                     "height": 36
-    #                 },
-    #                 "large": {
-    #                     "url": "https://www.course-api.com/images/store/extra-product-2.jpeg",
-    #                     "width": 717,
-    #                     "height": 512
-    #                 },
-    #                 "full": {
-    #                     "url": "https://www.course-api.com/images/store/extra-product-2.jpeg",
-    #                     "width": 3000,
-    #                     "height": 3000
-    #                 }
-    #             }
-    #         },
-    #         {
-    #             "id": "attTvaiDcADaAItLw",
-    #             "width": 1000,
-    #             "height": 650,
-    #             "url": "https://www.course-api.com/images/store/extra-product-3.jpeg",
-    #             "filename": "extra-3.jpeg",
-    #             "size": 107838,
-    #             "type": "image/jpeg",
-    #             "thumbnails": {
-    #                 "small": {
-    #                     "url": "https://www.course-api.com/images/store/extra-product-3.jpeg",
-    #                     "width": 55,
-    #                     "height": 36
-    #                 },
-    #                 "large": {
-    #                     "url": "https://www.course-api.com/images/store/extra-product-3.jpeg",
-    #                     "width": 788,
-    #                     "height": 512
-    #                 },
-    #                 "full": {
-    #                     "url": "https://www.course-api.com/images/store/extra-product-3.jpeg",
-    #                     "width": 3000,
-    #                     "height": 3000
-    #                 }
-    #             }
-    #         },
-    #         {
-    #             "id": "attdxQmF0aCH5I32F",
-    #             "width": 1000,
-    #             "height": 667,
-    #             "url": "https://www.course-api.com/images/store/extra-product-4.jpeg",
-    #             "filename": "extra-4.jpeg",
-    #             "size": 99481,
-    #             "type": "image/jpeg",
-    #             "thumbnails": {
-    #                 "small": {
-    #                     "url": "https://www.course-api.com/images/store/extra-product-4.jpeg",
-    #                     "width": 54,
-    #                     "height": 36
-    #                 },
-    #                 "large": {
-    #                     "url": "https://www.course-api.com/images/store/extra-product-4.jpeg",
-    #                     "width": 768,
-    #                     "height": 512
-    #                 },
-    #                 "full": {
-    #                     "url": "https://www.course-api.com/images/store/extra-product-4.jpeg",
-    #                     "width": 3000,
-    #                     "height": 3000
-    #                 }
-    #             }
-    #         }
-    #     ],
-    #     "reviews": 60,
-    #     "stars": 5,
-    #     "name": "emperor bed",
-    #     "description": "Cloud bread VHS hell of banjo bicycle rights jianbing umami mumblecore etsy 8-bit pok pok +1 wolf. Vexillologist yr dreamcatcher waistcoat, authentic chillwave trust fund. Viral typewriter fingerstache pinterest pork belly narwhal. Schlitz venmo everyday carry kitsch pitchfork chillwave iPhone taiyaki trust fund hashtag kinfolk microdosing gochujang live-edge",
-    #     "company": "ikea"
-    # }
-    # '''
+    json_data = '''
+        {
+    "id": "001ea43c-fdaf-4cec-96ca-75995001693b",
+    "name": "entertainment center",
+    "stock": 30,
+    "price": "59999.00",
+    "shipping": false,
+    "colors": [
+            {"value":"#f0f"},
+            {"value":"#f3f"},
+            {"value":"#3f9"}
+    ],
+    "category": "living room",
+    "images": [
+        {
+            "id": "cc923305-83d1-4f69-b22b-1b29dfe29c0e",
+            "width": 1000,
+            "height": 667,
+            "url": "https://www.course-api.com/images/store/product-7.jpeg",
+            "filename": null,
+            "size": null,
+            "type": "image/jpeg",
+            "thumbnail": {
+                "small": {
+                    "url": "https://www.course-api.com/images/store/product-7.jpeg",
+                    "width": 56,
+                    "height": 36
+                },
+                "large": {
+                    "url": "https://www.course-api.com/images/store/product-7.jpeg",
+                    "width": 709,
+                    "height": 512
+                },
+                "full": {
+                    "url": "https://www.course-api.com/images/store/product-7.jpeg",
+                    "width": 3000,
+                    "height": 3000
+                }
+            }
+        },
+        {
+            "id": "7a69a4ab-2e38-4eb4-bed6-7df644be55f0",
+            "width": 1000,
+            "height": 667,
+            "url": "https://www.course-api.com/images/store/product-1.jpeg",
+            "filename": null,
+            "size": null,
+            "type": "image/jpeg",
+            "thumbnail": {
+                "small": {
+                    "url": "https://www.course-api.com/images/store/product-7.jpeg",
+                    "width": 56,
+                    "height": 36
+                },
+                "large": {
+                    "url": "https://www.course-api.com/images/store/product-7.jpeg",
+                    "width": 709,
+                    "height": 512
+                },
+                "full": {
+                    "url": "https://www.course-api.com/images/store/product-7.jpeg",
+                    "width": 3000,
+                    "height": 3000
+                }
+            }
+        },
+        {
+            "id": "3fa66cfd-809f-44a4-9f1a-8bed8f0c59db",
+            "width": 1000,
+            "height": 667,
+            "url": "https://www.course-api.com/images/store/product-4.jpeg",
+            "filename": null,
+            "size": null,
+            "type": "image/jpeg",
+            "thumbnail": {
+                "small": {
+                    "url": "https://www.course-api.com/images/store/product-7.jpeg",
+                    "width": 56,
+                    "height": 36
+                },
+                "large": {
+                    "url": "https://www.course-api.com/images/store/product-7.jpeg",
+                    "width": 709,
+                    "height": 512
+                },
+                "full": {
+                    "url": "https://www.course-api.com/images/store/product-7.jpeg",
+                    "width": 3000,
+                    "height": 3000
+                }
+            }
+        },
+        {
+            "id": "324cdf2d-9c55-4b66-bc26-0d46b2a1e3e4",
+            "width": 1000,
+            "height": 667,
+            "url": "https://www.course-api.com/images/store/product-20.jpeg",
+            "filename": null,
+            "size": null,
+            "type": "image/jpeg",
+            "thumbnail": {
+                "small": {
+                    "url": "https://www.course-api.com/images/store/product-7.jpeg",
+                    "width": 56,
+                    "height": 36
+                },
+                "large": {
+                    "url": "https://www.course-api.com/images/store/product-7.jpeg",
+                    "width": 709,
+                    "height": 512
+                },
+                "full": {
+                    "url": "https://www.course-api.com/images/store/product-7.jpeg",
+                    "width": 3000,
+                    "height": 3000
+                }
+            }
+        },
+        {
+            "id": "8e19482b-227d-417d-87cf-2f93b58c402b",
+            "width": 1000,
+            "height": 667,
+            "url": "https://www.course-api.com/images/store/product-12.jpeg",
+            "filename": null,
+            "size": null,
+            "type": "image/jpeg",
+            "thumbnail": {
+                "small": {
+                    "url": "https://www.course-api.com/images/store/product-7.jpeg",
+                    "width": 56,
+                    "height": 36
+                },
+                "large": {
+                    "url": "https://www.course-api.com/images/store/product-7.jpeg",
+                    "width": 709,
+                    "height": 512
+                },
+                "full": {
+                    "url": "https://www.course-api.com/images/store/product-7.jpeg",
+                    "width": 3000,
+                    "height": 3000
+                }
+            }
+        }
+    ],
+    "featured": true,
+    "reviews": 3947,
+    "stars": 1,
+    "description": "Cloud bread VHS hell of banjo bicycle rights jianbing umami mumblecore etsy 8-bit pok pok +1 wolf. Vexillologist yr dreamcatcher waistcoat, authentic chillwave trust fund. Viral typewriter fingerstache pinterest pork belly narwhal. Schlitz venmo everyday carry kitsch pitchfork chillwave iPhone taiyaki trust fund hashtag kinfolk microdosing gochujang live-edge",
+    "company": "caressa"
+}
+    '''
 
-    # # Load the JSON data
-    # product_data = json.loads(json_data)
+    # Load the JSON data
+    product_data = json.loads(json_data)
     # colors_data = product_data.pop('colors')
-    # images_data = product_data.pop('images')
-    # # Access the loaded data
-    # print(colors_data)
+    images_data = product_data.pop('images')
+    # Access the loaded data
+    print(product_data['colors'], len(product_data['colors']))
     # print(images_data)
-    # ... and so on for other attributes
+    
 
