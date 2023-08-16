@@ -9,14 +9,14 @@ class Color(models.Model):
     
 
 class ThumbnailSize(models.Model):
-    url = models.URLField()
-    width = models.PositiveIntegerField()
-    height = models.PositiveIntegerField()
+    url = models.URLField(null=True)
+    width = models.PositiveIntegerField(null=True)
+    height = models.PositiveIntegerField(null=True)
 
 class Thumbnail(models.Model):
-    small = models.ForeignKey(ThumbnailSize, on_delete=models.CASCADE, related_name='small_thumbnails', default=1)
-    large = models.ForeignKey(ThumbnailSize, on_delete=models.CASCADE, related_name='large_thumbnails', default=2)
-    full = models.ForeignKey(ThumbnailSize, on_delete=models.CASCADE, related_name='full_thumbnails', default=3)
+    small = models.OneToOneField(ThumbnailSize, on_delete=models.CASCADE, related_name='small_thumbnails', default=1)
+    large = models.OneToOneField(ThumbnailSize, on_delete=models.CASCADE, related_name='large_thumbnails', default=2)
+    full = models.OneToOneField(ThumbnailSize, on_delete=models.CASCADE, related_name='full_thumbnails', default=3)
 
 class Image(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -26,7 +26,7 @@ class Image(models.Model):
     filename = models.CharField(max_length=50, null=True)
     size = models.PositiveIntegerField(null=True)
     type = models.CharField(max_length=50)
-    thumbnail = models.ForeignKey(Thumbnail, on_delete=models.CASCADE)
+    thumbnail = models.OneToOneField(Thumbnail, on_delete=models.CASCADE)
     
     def __str__(self):
         return f'{self.filename} + {self.width} + {self.height}'
@@ -40,8 +40,8 @@ class Product(models.Model):
     category = models.CharField(max_length=100)
     colors = models.ManyToManyField(Color, through='ProductColor')
     images = models.ManyToManyField(Image, through='ProductImage')
-    reviews = models.SmallIntegerField()
-    stars = models.SmallIntegerField()
+    reviews = models.SmallIntegerField(default=0)
+    stars = models.SmallIntegerField(default=0)
     featured = models.BooleanField(default=False)
     description = models.TextField(null=True)
     company = models.CharField(max_length=50)
@@ -62,3 +62,7 @@ class ProductImage(models.Model):
 
     def __str__(self):
         return f'{self.product.name} - {self.image.filename}'
+    
+
+
+    

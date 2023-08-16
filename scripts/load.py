@@ -8,89 +8,6 @@ from io import BytesIO
 from rest_framework.response import Response
 from StoreProductAPI.models import Color, ThumbnailSize, Thumbnail, Image, Product, ProductColor, ProductImage
 
-def create_image(image_data):
-    width_large, height_large = get_image_size(image_data['url'])
-        
-    thumbnail_small, created = ThumbnailSize.objects.get_or_create(
-        url=image_data['url'], 
-        width=random.randint(50, 60),
-        height=random.randint(30, 40)
-    )
-
-    thumbnail_large, created = ThumbnailSize.objects.get_or_create(
-        url=image_data['url'],
-        width=width_large, 
-        height=height_large
-    )
-
-    thumbnail_full, created = ThumbnailSize.objects.get_or_create(
-        url=image_data['url'], 
-        width=3000,
-        height=3000
-    )
-
-    thumbnail, _ = Thumbnail.objects.get_or_create(
-        small=thumbnail_small,
-        large=thumbnail_large,
-        full=thumbnail_full
-    )
-
-    image_obj, created = Image.objects.get_or_create(
-        thumbnail=thumbnail,
-        width=image_data['width'],
-        height=image_data['height'],
-        url=image_data['url'],
-        filename=image_data['filename'],
-        size=image_data['size'],
-        type=image_data['type'],
-    )
-    return image_obj
-
-def update_product(product, data, method):
-    colors_data = data.pop("colors", [])
-    images_data = data.pop("images", [])
-        
-    #  freq_color = dict()
-    # freq_image = dict()
-    # [freq_color.update({str(obj).split()[-1]: 1}) for obj in product.productcolor_set.all()] 
-    # [freq_color.update({str(obj).split()[-1]: 1}) for obj in product.productcolor_set.all()] 
-    
-    product.colors.clear()
-    for color_data in colors_data:
-        color_obj, created = Color.objects.get_or_create(**color_data)
-        product.colors.add(color_obj)
-
-    product.images.clear()
-    for image_data in images_data:
-        image_obj = create_image(image_data)
-        product.images.add(image_obj)
-
-    serialized_product_update = method(product, data=data, partial=True)
-    serialized_product_update.is_valid(raise_exception=True)
-    serialized_product_update.save()
-    return serialized_product_update
-
-def post_product(data, method):
-    colors_data = data.pop('colors', [])
-    images_data = data.pop('images', [])
-    
-    product = Product.objects.create(**data)
-
-    
-    for color_data in colors_data:
-        color_ = Color.objects.get_or_create(**color_data)[0]
-        ProductColor.objects.create(product=product, color=color_)
-
-    
-    for image_data in images_data:
-        image_ = create_image(image_data)
-        ProductImage.objects.create(product=product, image=image_)
-    
-    serialized_product = method(data=data)
-    serialized_product.is_valid(raise_exception=True)
-    serialized_product.save()
-    return serialized_product
-
 def get_image_size(url):
     try:
         response = requests.get(url)
@@ -106,17 +23,61 @@ def get_image_size(url):
         print("An unexpected error occurred:", e)
 
 
+def create_thumbnail(url):
+    url_exists = Image.objects.filter(url=url).first()
+    if url_exists is not None:
+        return url_exists.thumbnail
+    
+    thumbnail_small, created = ThumbnailSize.objects.get_or_create(
+        url=url, 
+        width=random.randint(50, 60),
+        height=random.randint(30, 40)
+    )
+
+    width_large, height_large = get_image_size(url)
+    thumbnail_large, created = ThumbnailSize.objects.get_or_create(
+        url=url,
+        width=width_large, 
+        height=height_large
+    )
+
+    thumbnail_full, created = ThumbnailSize.objects.get_or_create(
+        url=url, 
+        width=3000,
+        height=3000
+    )
+    
+    thumbnail, _ = Thumbnail.objects.get_or_create(
+        small=thumbnail_small,
+        large=thumbnail_large,
+        full=thumbnail_full
+    )
+    return thumbnail
+
+
+def create_image(image_data_url, width, height, type):
+
+    thumbnail = create_thumbnail(image_data_url)
+
+    image_obj, created = Image.objects.get_or_create(
+        thumbnail=thumbnail,
+        width=width,
+        height=height,
+        url=image_data_url,
+        filename=None,
+        size=None,
+        type=type,
+    )
+    return image_obj
+
+
 def run():
-
-    # with connection.cursor() as cursor:
-    #     cursor.execute("SELECT setval(pg_get_serial_sequence('StoreProductAPI_color_id_seq'), 1, false);")
-
-    url = "https://course-api.com/react-store-products"  # Replace with the actual URL
+    url = "https://course-api.com/react-store-products"  
 
     try:
         response = requests.get(url)
-        response.raise_for_status()  # Raise an exception if the HTTP request returns an error
-        json_data = response.json()  # Parse the JSON content from the response
+        response.raise_for_status() 
+        json_data = response.json()  
         
         Color.objects.all().delete()
         ThumbnailSize.objects.all().delete()
@@ -130,38 +91,7 @@ def run():
         print(image_url_arr)
 
         for data in json_data:
-            width_large, height_large = get_image_size(data['image'])
-            thumbnail_small, created = ThumbnailSize.objects.get_or_create(
-                url=data['image'], 
-                width=random.randint(50, 60),
-                height=random.randint(30,40)
-            )
-            
-            thumbnail_large, created = ThumbnailSize.objects.get_or_create(
-                url=data['image'],
-                width=width_large, 
-                height=height_large
-            )
-            
-            thumbnail_full, created = ThumbnailSize.objects.get_or_create(
-                url=data['image'], 
-                width=3000,
-                height=3000
-            )
-
-            thumbnail, created = Thumbnail.objects.get_or_create(
-                small=thumbnail_small, 
-                large=thumbnail_large, 
-                full=thumbnail_full
-            )
-            
-            image_, created = Image.objects.get_or_create(
-                width=1000,
-                height=667, 
-                url=data['image'], 
-                type='image/jpeg', 
-                thumbnail=thumbnail
-            )
+            image_ = create_image(data['image'], 1000, 667, 'image/jpeg')
             
             featured_value = False
             if data['name'] in ['entertainment center', 'high-back bench', 'modern bookshelf']:
@@ -183,18 +113,10 @@ def run():
                 color_, created = Color.objects.get_or_create(value=color)
                 product_color, created = ProductColor.objects.get_or_create(color=color_, product=product)
             
-            product_color, created = ProductImage.objects.get_or_create(image=image_, product=product)
+            image_all = Image.objects.all()
             for i in range(4):
-                random_url_image = random.choice(image_url_arr)
-                print(random_url_image)
-                image_, created = Image.objects.get_or_create(
-                    width=1000,
-                    height=667, 
-                    url=random_url_image, 
-                    type='image/jpeg', 
-                    thumbnail=thumbnail
-                )
-                product_color, created = ProductImage.objects.get_or_create(image=image_, product=product)
+                random_image = random.choice(image_all)
+                product.images.add(random_image)
 
     except requests.exceptions.RequestException as e:
         print("An error occurred:", e)
@@ -358,11 +280,11 @@ def run():
     '''
 
     # Load the JSON data
-    product_data = json.loads(json_data)
-    # colors_data = product_data.pop('colors')
-    images_data = product_data.pop('images')
-    # Access the loaded data
-    print(product_data['colors'], len(product_data['colors']))
+    # product_data = json.loads(json_data)
+    # # colors_data = product_data.pop('colors')
+    # images_data = product_data.pop('images')
+    # # Access the loaded data
+    # print(product_data['colors'], len(product_data['colors']))
     # print(images_data)
     
 
