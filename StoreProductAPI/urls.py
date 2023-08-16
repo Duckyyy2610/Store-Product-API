@@ -10,6 +10,7 @@ urlpatterns = [
     path('store-products/<uuid:pk>', views.single_store_product, name="single-store-product"),
     path('image-products/', views.image_products, name="image-products"),
     path('image-products/<uuid:pk>', views.single_image_product, name="single-image-product"),
-    
+    path('colors/', views.colors, name="colors"),
+    path('colors/<int:pk>', views.single_color, name="single-color")
     # path('api/', include(router.urls))
 ]

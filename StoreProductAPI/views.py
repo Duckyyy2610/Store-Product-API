@@ -1,5 +1,5 @@
 import random
-from scripts.load import get_image_size, create_image, create_thumbnail
+from scripts.function import get_image_size, create_image, create_thumbnail
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from rest_framework import status
@@ -19,10 +19,10 @@ def store_products(request):
         return Response(serialized_products.data)
     
     elif request.method == 'POST':
-        serializer_product = SingleProductSerializer(data=request.data)
-        serializer_product.is_valid(raise_exception=True)
-        serializer_product.save()
-        return Response(serializer_product.data, status=status.HTTP_200_OK)
+        serialized_product = SingleProductSerializer(data=request.data)
+        serialized_product.is_valid(raise_exception=True)
+        serialized_product.save()
+        return Response(serialized_product.data, status=status.HTTP_200_OK)
     
     elif request.method == 'PUT' or request.method == 'PATCH':
         product = get_object_or_404(Product, pk=request.data.get('id'))
@@ -35,6 +35,7 @@ def store_products(request):
 @api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
 def single_store_product(request, pk):
     product = get_object_or_404(Product.objects.all(), pk=pk)
+
     if request.method == 'GET':
         serialized_product = SingleProductSerializer(product)
         return Response(serialized_product.data, status=status.HTTP_200_OK)
@@ -58,10 +59,10 @@ def image_products(request):
         return Response(serialized_image.data, status=status.HTTP_200_OK)
     
     elif request.method == 'POST':
-        serializer_image = SingleImageSerializer(data=request.data)
-        serialized_image.is_valid(raise_exceptions=True)
+        serialized_image = SingleImageSerializer(data=request.data)
+        serialized_image.is_valid(raise_exception=True)
         serialized_image.save()
-        return Response(serializer_image.data, status=status.HTTP_200_OK)
+        return Response(serialized_image.data, status=status.HTTP_200_OK)
     
     elif request.method == 'PUT' or request.method == 'PATCH':
         image = get_object_or_404(Image, pk=request.data.get('id'))
@@ -74,6 +75,7 @@ def image_products(request):
 @api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
 def single_image_product(request, pk):
     image = get_object_or_404(Image, pk=pk)
+
     if request.method == 'GET':
         serialized_image = SingleImageSerializer(image)
         return Response(serialized_image.data, status=status.HTTP_200_OK)
@@ -86,6 +88,47 @@ def single_image_product(request, pk):
 
     elif request.method == 'DELETE':
         image.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+
+
+@api_view(['GET', 'POST', 'PUT', 'PATCH'])
+def colors(request):
+    if request.method == 'GET':
+        colors_ = Color.objects.all()
+        serialized_image = ColorSerializer(colors_, many=True)
+        return Response(serialized_image.data, status=status.HTTP_200_OK)
+    
+    elif request.method == 'POST':
+        serialized_image = ColorSerializer(data=request.data)
+        serialized_image.is_valid(raise_exception=True)
+        serialized_image.save()
+        return Response(serialized_image.data, status=status.HTTP_200_OK)
+    
+    elif request.method == 'PUT' or request.method == 'PATCH':
+        image = get_object_or_404(Image, pk=request.data.get('id'))
+        serialized_image_update = ColorSerializer(image, data=request.data)
+        serialized_image_update.is_valid(raise_exception=True)
+        serialized_image_update.save()
+        return Response(serialized_image_update.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
+def single_color(request, pk):
+    color = get_object_or_404(Color, pk=pk)
+
+    if request.method == 'GET':
+        serialized_image = ColorSerializer(color)
+        return Response(serialized_image.data, status=status.HTTP_200_OK)
+    
+    elif request.method in ['PUT', 'PATCH']:
+        serialized_image_update = ColorSerializer(color, data=request.data)
+        serialized_image_update.is_valid(raise_exception=True)
+        serialized_image_update.save()
+        return Response(serialized_image_update.data, status=status.HTTP_200_OK)
+
+    elif request.method == 'DELETE':
+        color.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 

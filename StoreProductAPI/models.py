@@ -1,6 +1,6 @@
 from django.db import models
 import uuid
-# Create your models here.
+
 class Color(models.Model):
     value = models.CharField(max_length=10)
 
@@ -31,6 +31,10 @@ class Image(models.Model):
     def __str__(self):
         return f'{self.filename} + {self.width} + {self.height}'
     
+    def save(self, *args, **kwargs):
+        self.thumbnail.save()
+        super().save(*args, **kwargs)
+
 class Product(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=150)

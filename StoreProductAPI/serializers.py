@@ -1,13 +1,13 @@
 import random
 from django.db import transaction
-from scripts.load import get_image_size, create_image, create_thumbnail
+from scripts.function import get_image_size, create_image, create_thumbnail
 from rest_framework import serializers
 from .models import Color, ThumbnailSize, Thumbnail, Image, Product, ProductColor, ProductImage
 
 class ColorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Color
-        fields = ['value']
+        fields = ['id', 'value']
 
 class ThumbnailSizeSerializer(serializers.ModelSerializer):
     class Meta:
@@ -23,11 +23,11 @@ class ThumbnailSerializer(serializers.ModelSerializer):
         fields = ['small', 'large', 'full']
 
 class SingleImageSerializer(serializers.ModelSerializer):
-    thumbnail = ThumbnailSerializer()
+    thumbnail = ThumbnailSerializer(required=False)
     class Meta:
         model = Image
         fields = ['id', 'width', 'height', 'url', 'filename', 'size', 'type', 'thumbnail']
-
+        extra_kwargs = {'thumbnail': {'required': False}}
 
     def create(self, validated_data):
         image = create_image(validated_data['url'], validated_data['width'], validated_data['height'], validated_data['type'])
@@ -43,32 +43,13 @@ class SingleImageSerializer(serializers.ModelSerializer):
         instance.filename = validated_data.get('filename', instance.filename)
         instance.size = validated_data.get('size', instance.size)
         instance.type = validated_data.get('type', instance.type)
-        
-        # Save the updated image data
-        instance.save()
       
-        # Update thumbnail data if provided
         url = validated_data.get('url', None)
+
         if url is not None:
-            thumbnail_data = create_thumbnail(url)
+            instance.thumbnail = create_thumbnail(url)
         
-            instance.thumbnail.small.width = thumbnail_data.small.width
-            instance.thumbnail.small.height = thumbnail_data.small.height
-            instance.thumbnail.small.url = thumbnail_data.small.url
-            instance.thumbnail.small.save()
-
-            instance.thumbnail.large.width = thumbnail_data.large.width
-            instance.thumbnail.large.height = thumbnail_data.large.height
-            instance.thumbnail.large.url = thumbnail_data.large.url
-            instance.thumbnail.large.save()
-
-            instance.thumbnail.full.width = thumbnail_data.full.width
-            instance.thumbnail.full.height = thumbnail_data.full.height
-            instance.thumbnail.full.url = thumbnail_data.full.url
-            instance.thumbnail.full.save()
-
-            instance.save()
-
+        instance.save()
         return instance     
 
 class ImageSerializer(serializers.ModelSerializer):
