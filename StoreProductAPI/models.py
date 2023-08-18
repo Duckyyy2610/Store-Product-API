@@ -6,10 +6,15 @@ class Color(models.Model):
 
     def __str__(self):
         return self.value
-    
+
+    def __getitem__(self, key):
+        if hasattr(self, key):
+            return getattr(self, key)
+        else:
+            raise KeyError(f"'{key}' attribute not found")   
 
 class ThumbnailSize(models.Model):
-    url = models.URLField(null=True)
+    url = models.URLField(max_length=900, null=True)
     width = models.PositiveIntegerField(null=True)
     height = models.PositiveIntegerField(null=True)
 
@@ -22,7 +27,7 @@ class Image(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     width = models.PositiveIntegerField(null=False)
     height = models.PositiveIntegerField(null=False)
-    url = models.URLField(null=False)
+    url = models.URLField(max_length=900, null=False)
     filename = models.CharField(max_length=50, null=True)
     size = models.PositiveIntegerField(null=True)
     type = models.CharField(max_length=50)
@@ -34,6 +39,12 @@ class Image(models.Model):
     def save(self, *args, **kwargs):
         self.thumbnail.save()
         super().save(*args, **kwargs)
+    
+    def __getitem__(self, key):
+        if hasattr(self, key):
+            return getattr(self, key)
+        else:
+            raise KeyError(f"'{key}' attribute not found")
 
 class Product(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

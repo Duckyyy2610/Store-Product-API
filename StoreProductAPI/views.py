@@ -1,5 +1,6 @@
 import random
-from scripts.function import get_image_size, create_image, create_thumbnail
+import re
+from scripts.function import get_image_size, get_or_create_image, get_or_create_thumbnail
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from rest_framework import status
@@ -10,11 +11,79 @@ from StoreProductAPI.models import Color, ThumbnailSize, Thumbnail, Image, Produ
 from StoreProductAPI.serializers import ColorSerializer, SingleImageSerializer, ImageSerializer, ThumbnailSizeSerializer, ThumbnailSerializer, SingleProductSerializer, ProductSerializer
 # Create your views here.
 
+def get_ordering(instance, ordering_data):
+    ordering_fields = re.split('[|, /._+]+', ordering_data)
+    return instance.order_by(*ordering_fields)
+
+def add_or_delete(instance, instance_related, add_data, delete_data):
+
+    instance_related_for_this_instance = instance[instance_related].all() 
+    data_freq = dict()
+
+    # if 'images' in [add_data, delete_data]:
+    for data in instance_related_for_this_instance:
+        if instance_related == 'images':    
+            data_freq.update({data.url: 1})
+        else:
+            data_freq.update({data.value: 1})
+
+    for data in add_data:
+        if data not in data_freq:
+            instance_created = None
+            if instance_related == 'images':
+                instance_created = get_or_create_image(data, random.randint(900, 1000), random.randint(600, 700), 'image/jpeg')
+            elif instance_created == 'colors':
+                instance_created = Color.objects.get_or_create(value=data)
+            instance[instance_related].add(instance_created)
+            data_freq[data] = 1
+    
+    return instance 
+
+    for data in delete_data:
+        if data_freq[data]:
+            get_instance = None
+            if instance_related == 'images':
+                get_instance = instance[instance_related].get(url=data)
+            elif instance_related == 'colors':
+                get_instance = instance[instance_related].get(value=data)    
+            instance[instance_related].remove(get_instance)
+
 
 @api_view(['GET', 'POST', 'PUT', 'PATCH'])
 def store_products(request):
     if request.method == 'GET':
         products = Product.objects.all()
+        product_uuid = request.query_params.get('uuid')
+        product_name = request.query_params.get('name')
+        product_price = request.query_params.get('price')
+        product_company = request.query_params.get('company')
+        product_description = request.query_params.get('description')
+        product_category = request.query_params.get('category') 
+        product_shipping = request.query_params.get('shipping')
+        ordering = request.query_params.get('ordering')
+
+        if product_uuid: 
+            products = products.filter(uuid__icontains=product_uuid)
+
+        if product_name:
+            products = products.filter(name__icontains=product_name)
+        
+        if product_price:
+            products = products.filter(price__icontains=product_price)
+
+        if product_company:
+            products = products.filter(company__icontains=product_company)
+
+        if product_description:
+            products = products.filter(description__icontains=product_description)
+
+        if product_category:
+            products = products.filter(category__icontains=product_category)
+
+        if ordering:
+            products = get_ordering(products, ordering)
+        # products = products.filter(shipping__contains=product_company)
+
         serialized_products = ProductSerializer(products, many=True)
         return Response(serialized_products.data)
     
@@ -34,13 +103,20 @@ def store_products(request):
 
 @api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
 def single_store_product(request, pk):
-    product = get_object_or_404(Product.objects.all(), pk=pk)
+    product = get_object_or_404(Product, pk=pk)
 
     if request.method == 'GET':
         serialized_product = SingleProductSerializer(product)
         return Response(serialized_product.data, status=status.HTTP_200_OK)
     
     if request.method == 'PUT' or request.method == 'PATCH':
+        images_from_this_product = product.images.all()
+        if 'add_images' in request.data or 'delete_images' in request.data:
+            product = add_or_delete(product, 'images', request.data['add_images'], request.data['delete_images'])
+
+        if 'add_colors' in request.data or 'delete_colors' in request.data:
+            product = add_or_delete(product, 'colors', request.data['add_colors'], request.data['delete_colors'])
+
         serialized_product_update = SingleProductSerializer(product, data=request.data)
         serialized_product_update.is_valid(raise_exception=True)
         serialized_product_update.save()
@@ -55,6 +131,29 @@ def single_store_product(request, pk):
 def image_products(request):
     if request.method == 'GET':
         images = Image.objects.all()
+
+        image_uuid = request.query_params.get('id')
+        image_width = request.query_params.get('width')
+        image_height = request.query_params.get('height')
+        image_url = request.query_params.get('url')
+        type = request.query_params.get('type')
+        ordering = request.query_params.get('ordering')
+
+        if image_uuid:
+            images = images.filter(uuid__icontains=image_uuid)
+        
+        if image_width:
+            images = images.filter(width__icontains=image_width)
+
+        if image_height:
+            images = images.filter(height__icontains=image_height)
+
+        if image_url:
+            images = images.filter(url__icontains=image_url)
+
+        if ordering:
+            images = get_ordering(images, ordering)
+
         serialized_image = ImageSerializer(images, many=True)
         return Response(serialized_image.data, status=status.HTTP_200_OK)
     
@@ -96,6 +195,20 @@ def single_image_product(request, pk):
 def colors(request):
     if request.method == 'GET':
         colors_ = Color.objects.all()
+
+        color_id = request.query_params.get('id')
+        color_value = request.query_params.get('value')
+        ordering = request.query_params.get('ordering')
+        
+        if color_id:
+            colors_ = colors_.filter(id__icontains=color_id)
+        
+        if color_value:
+            colors_ = colors_.filter(value__icontains=color_value)
+
+        if ordering:
+            colors_ = get_ordering(colors_, ordering)
+
         serialized_image = ColorSerializer(colors_, many=True)
         return Response(serialized_image.data, status=status.HTTP_200_OK)
     

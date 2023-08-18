@@ -1,6 +1,6 @@
 import random
 from django.db import transaction
-from scripts.function import get_image_size, create_image, create_thumbnail
+from scripts.function import get_image_size, get_or_create_image, get_or_create_thumbnail
 from rest_framework import serializers
 from .models import Color, ThumbnailSize, Thumbnail, Image, Product, ProductColor, ProductImage
 
@@ -15,22 +15,22 @@ class ThumbnailSizeSerializer(serializers.ModelSerializer):
         fields = ['url', 'width', 'height']
 
 class ThumbnailSerializer(serializers.ModelSerializer):
-    small = ThumbnailSizeSerializer()
-    large = ThumbnailSizeSerializer()
-    full = ThumbnailSizeSerializer()
+    small = ThumbnailSizeSerializer(read_only=True, required=False)
+    large = ThumbnailSizeSerializer(read_only=True, required=False)
+    full = ThumbnailSizeSerializer(read_only=True, required=False)
     class Meta:
         model = Thumbnail
         fields = ['small', 'large', 'full']
 
 class SingleImageSerializer(serializers.ModelSerializer):
-    thumbnail = ThumbnailSerializer(required=False)
+    thumbnail = ThumbnailSerializer(required=False, read_only=True)
     class Meta:
         model = Image
         fields = ['id', 'width', 'height', 'url', 'filename', 'size', 'type', 'thumbnail']
-        extra_kwargs = {'thumbnail': {'required': False}}
+        # extra_kwargs = {'thumbnail': {'required': False}}
 
     def create(self, validated_data):
-        image = create_image(validated_data['url'], validated_data['width'], validated_data['height'], validated_data['type'])
+        image = get_or_create_image(validated_data['url'], validated_data['width'], validated_data['height'], validated_data['type'])
         image.save()
         return image
         
@@ -47,13 +47,13 @@ class SingleImageSerializer(serializers.ModelSerializer):
         url = validated_data.get('url', None)
 
         if url is not None:
-            instance.thumbnail = create_thumbnail(url)
+            instance.thumbnail = get_or_create_thumbnail(url)
         
         instance.save()
         return instance     
 
 class ImageSerializer(serializers.ModelSerializer):
-    thumbnail = ThumbnailSerializer()
+    thumbnail = ThumbnailSerializer(read_only=True, required=False)
     class Meta:
         model = Image
         fields = ['id', 'width', 'height', 'url', 'filename', 'size', 'type', 'thumbnail']
@@ -63,8 +63,8 @@ class SingleProductSerializer(serializers.ModelSerializer):
     # colors = ColorSerializer(many=True)
     # images = ImageSerializer(many=True, read_only=True)
 
-    colors = serializers.SerializerMethodField()
-    images = SingleImageSerializer(many=True)
+    colors = serializers.SerializerMethodField(required=False)
+    images = SingleImageSerializer(many=True, required=False)
     class Meta:
         model = Product
         fields = ['id', 'name', 'stock', 'price', 'shipping', 'colors', 'category', 'images', 'featured', 'reviews', 'stars', 'description', 'company']
@@ -85,7 +85,7 @@ class SingleProductSerializer(serializers.ModelSerializer):
 
         
         for image_data in images_data:
-            image_ = create_image(image_data)
+            image_ = get_or_create_image(image_data)
             ProductImage.objects.create(product=product, image=image_)
 
         product.save()
@@ -107,7 +107,7 @@ class SingleProductSerializer(serializers.ModelSerializer):
 
         instance.images.clear()
         for image_data in images_data:
-            image_obj = create_image(image_data, image_data['width'], image_data['height'], 'image/jpeg')
+            image_obj = get_or_create_image(image_data, image_data['width'], image_data['height'], 'image/jpeg')
             instance.images.add(image_obj)
         
         for attr, value in validated_data.items():

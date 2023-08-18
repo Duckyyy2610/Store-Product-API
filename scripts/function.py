@@ -23,10 +23,7 @@ def get_image_size(url):
         print("An unexpected error occurred:", e)
 
 
-def create_thumbnail(url):
-    url_exists = Image.objects.filter(url=url).first()
-    if url_exists is not None:
-        return url_exists.thumbnail
+def get_or_create_thumbnail(url):
     
     thumbnail_small, created = ThumbnailSize.objects.get_or_create(
         url=url, 
@@ -55,9 +52,13 @@ def create_thumbnail(url):
     return thumbnail
 
 
-def create_image(image_data_url, width, height, type):
+def get_or_create_image(image_data_url, width, height, type):
+    
+    url_exists = Image.objects.filter(url=image_data_url).first()
+    if url_exists:
+        return url_exists
 
-    thumbnail = create_thumbnail(image_data_url)
+    thumbnail = get_or_create_thumbnail(image_data_url)
 
     image_obj, created = Image.objects.get_or_create(
         thumbnail=thumbnail,

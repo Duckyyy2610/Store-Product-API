@@ -7,7 +7,7 @@ from PIL import Image as img
 from io import BytesIO
 from rest_framework.response import Response
 from StoreProductAPI.models import Color, ThumbnailSize, Thumbnail, Image, Product, ProductColor, ProductImage
-from scripts.function import  get_image_size, create_thumbnail, create_image 
+from scripts.function import  get_image_size, get_or_create_thumbnail, get_or_create_image 
 
 
 def run():
@@ -30,7 +30,7 @@ def run():
         print(image_url_arr)
 
         for data in json_data:
-            image_ = create_image(data['image'], 1000, 667, 'image/jpeg')
+            image_ = get_or_create_image(data['image'], 1000, 667, 'image/jpeg')
             
             featured_value = False
             if data['name'] in ['entertainment center', 'high-back bench', 'modern bookshelf']:
