@@ -60,22 +60,20 @@ class ImageSerializer(serializers.ModelSerializer):
         
 
 class SingleProductSerializer(serializers.ModelSerializer):
-    # colors = ColorSerializer(many=True)
-    # images = ImageSerializer(many=True, read_only=True)
-
     colors = serializers.SerializerMethodField(required=False)
     images = SingleImageSerializer(many=True, required=False)
+    # shipping = serializers.Serializer(required=False)
     class Meta:
         model = Product
         fields = ['id', 'name', 'stock', 'price', 'shipping', 'colors', 'category', 'images', 'featured', 'reviews', 'stars', 'description', 'company']
     
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # Allow partial updates (PATCH) without requiring certain fields
-        self.partial = kwargs.get('partial', False)
-        if self.partial:
-            for field_name in ['name', 'stock', 'price', 'category', 'company']:
-                self.fields.pop(field_name)
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #     # Allow partial updates (PATCH) without requiring certain fields
+    #     self.partial = kwargs.get('partial', False)
+    #     if self.partial:
+    #         for field_name in ['name', 'stock', 'price', 'category', 'company']:
+    #             self.fields.pop(field_name)
 
     def get_colors(self, obj):
         return [color.value for color in obj.colors.all()]
@@ -107,31 +105,10 @@ class SingleProductSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
     
-
-class PartialProductSerializer(SingleProductSerializer):
-    def update(self, instance, validated_data):
-        # Override the update method to handle partial updates
-        for attr, value in validated_data.items():
-            setattr(instance, attr, value)
-
-        colors_data = validated_data.pop("colors", [])
-        images_data = validated_data.pop("images", [])
-
-        if 'add_colors' in self.initial_data or 'delete_colors' in self.initial_data:
-            add_colors = self.initial_data.get('add_colors', [])
-            delete_colors = self.initial_data.get('delete_colors', [])
-            instance = add_or_delete(instance, 'colors', add_colors, delete_colors)
-
-        if 'add_images' in self.initial_data or 'delete_images' in self.initial_data:
-            add_images = self.initial_data.get('add_images', [])
-            delete_images = self.initial_data.get('delete_images', [])
-            instance = add_or_delete(instance, 'images', add_images, delete_images)
-
-        instance.save()
-        return instance
 class ProductSerializer(serializers.ModelSerializer):
     colors = serializers.SerializerMethodField()
     image = serializers.SerializerMethodField(source="images")
+    # shipping = serializers.Serializer(required=False)
     class Meta:
         model = Product
         fields = ['id', 'name', 'price', 'image', 'featured',  'colors', 'company', 'description', 'category',  'shipping']

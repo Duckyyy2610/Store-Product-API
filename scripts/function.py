@@ -2,6 +2,7 @@ import requests
 import json
 import random
 import json
+import re
 from django.db import connection
 from PIL import Image as img
 from io import BytesIO

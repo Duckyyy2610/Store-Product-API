@@ -49,17 +49,17 @@ class Image(models.Model):
 class Product(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=150)
-    stock = models.IntegerField(null=False)
-    price = models.DecimalField(max_digits=9, decimal_places=2)
-    shipping = models.BooleanField(default=False)
-    category = models.CharField(max_length=100)
-    colors = models.ManyToManyField(Color, through='ProductColor')
+    price = models.DecimalField(max_digits=11, decimal_places=2)
     images = models.ManyToManyField(Image, through='ProductImage')
-    reviews = models.SmallIntegerField(default=0)
-    stars = models.SmallIntegerField(default=0)
-    featured = models.BooleanField(default=False)
-    description = models.TextField(null=True)
+    colors = models.ManyToManyField(Color, through='ProductColor')
     company = models.CharField(max_length=50)
+    description = models.TextField(null=True)
+    category = models.CharField(max_length=100)
+    shipping = models.BooleanField(default=False, null=True)
+    stock = models.IntegerField(null=True)
+    reviews = models.SmallIntegerField(default=0, null=True)
+    stars = models.SmallIntegerField(default=0, null=True)
+    featured = models.BooleanField(default=False, null=True)
 
     def __str__(self):
         return self.name
