@@ -71,3 +71,49 @@ def get_or_create_image(image_data_url, width, height, type):
     )
     return image_obj
 
+
+def get_ordering(instance, ordering_data):
+    ordering_fields = re.split('[|, /._+]+', ordering_data)
+    return instance.order_by(*ordering_fields)
+
+def add_or_delete(instance, instance_related, add_data, delete_data):
+    instance_related_for_this_instance = instance[instance_related].all() 
+    data_freq = dict()
+    instance__ = instance[instance_related]
+
+    for data in instance_related_for_this_instance:
+        if instance_related == 'images':    
+            data_freq.update({data.url: 1})
+        elif instance_related == 'colors':
+            data_freq.update({data.value: 1})
+
+    for data in add_data:
+        if data not in data_freq:
+            instance_created = None
+            
+            if instance_related == 'images':
+                instance_created = get_or_create_image(data, random.randint(900, 1000), random.randint(600, 700), 'image/jpeg')
+
+            elif instance_related == 'colors':
+                instance_created, _ = Color.objects.get_or_create(value=data)
+
+            instance__.add(instance_created)
+            data_freq[data] = 1
+    
+
+    for data in delete_data:
+        if data_freq.get(data, 0):
+            get_instance = None
+            if instance_related == 'images':
+                get_instance = instance__.filter(url=data).first()
+            elif instance_related == 'colors':
+                get_instance = instance__.filter(value=data).first()
+
+
+            if len(instance_related_for_this_instance) and get_instance is not None:
+                instance__.remove(get_instance)
+            else:
+                break
+            data_freq[data] = 0
+            
+    return instance 

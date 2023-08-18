@@ -1,6 +1,6 @@
 import random
 import re
-from scripts.function import get_image_size, get_or_create_image, get_or_create_thumbnail
+from scripts.function import get_image_size, get_or_create_image, get_or_create_thumbnail, add_or_delete, get_ordering
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from rest_framework import status
@@ -10,44 +10,6 @@ from rest_framework.viewsets import ModelViewSet
 from StoreProductAPI.models import Color, ThumbnailSize, Thumbnail, Image, Product, ProductColor, ProductImage
 from StoreProductAPI.serializers import ColorSerializer, SingleImageSerializer, ImageSerializer, ThumbnailSizeSerializer, ThumbnailSerializer, SingleProductSerializer, ProductSerializer
 # Create your views here.
-
-def get_ordering(instance, ordering_data):
-    ordering_fields = re.split('[|, /._+]+', ordering_data)
-    return instance.order_by(*ordering_fields)
-
-def add_or_delete(instance, instance_related, add_data, delete_data):
-
-    instance_related_for_this_instance = instance[instance_related].all() 
-    data_freq = dict()
-
-    # if 'images' in [add_data, delete_data]:
-    for data in instance_related_for_this_instance:
-        if instance_related == 'images':    
-            data_freq.update({data.url: 1})
-        else:
-            data_freq.update({data.value: 1})
-
-    for data in add_data:
-        if data not in data_freq:
-            instance_created = None
-            if instance_related == 'images':
-                instance_created = get_or_create_image(data, random.randint(900, 1000), random.randint(600, 700), 'image/jpeg')
-            elif instance_created == 'colors':
-                instance_created = Color.objects.get_or_create(value=data)
-            instance[instance_related].add(instance_created)
-            data_freq[data] = 1
-    
-    return instance 
-
-    for data in delete_data:
-        if data_freq[data]:
-            get_instance = None
-            if instance_related == 'images':
-                get_instance = instance[instance_related].get(url=data)
-            elif instance_related == 'colors':
-                get_instance = instance[instance_related].get(value=data)    
-            instance[instance_related].remove(get_instance)
-
 
 @api_view(['GET', 'POST', 'PUT', 'PATCH'])
 def store_products(request):
@@ -111,11 +73,16 @@ def single_store_product(request, pk):
     
     if request.method == 'PUT' or request.method == 'PATCH':
         images_from_this_product = product.images.all()
-        if 'add_images' in request.data or 'delete_images' in request.data:
-            product = add_or_delete(product, 'images', request.data['add_images'], request.data['delete_images'])
+        
+        # add_images = request.data.get('add_images', [])
+        # delete_images = request.data.get('delete_images', [])
+        # if add_images or delete_images:
+        #     product = add_or_delete(product, 'images', add_images, delete_images)
 
-        if 'add_colors' in request.data or 'delete_colors' in request.data:
-            product = add_or_delete(product, 'colors', request.data['add_colors'], request.data['delete_colors'])
+        # add_colors = request.data.get('add_colors', [])
+        # delete_colors = request.data.get('delete_colors', [])
+        # if add_colors or delete_colors:
+        #     product = add_or_delete(product, 'colors', add_colors, delete_colors)
 
         serialized_product_update = SingleProductSerializer(product, data=request.data)
         serialized_product_update.is_valid(raise_exception=True)

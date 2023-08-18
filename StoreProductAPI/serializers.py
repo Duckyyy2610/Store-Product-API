@@ -1,6 +1,6 @@
 import random
 from django.db import transaction
-from scripts.function import get_image_size, get_or_create_image, get_or_create_thumbnail
+from scripts.function import get_image_size, get_or_create_image, get_or_create_thumbnail, add_or_delete, get_ordering
 from rest_framework import serializers
 from .models import Color, ThumbnailSize, Thumbnail, Image, Product, ProductColor, ProductImage
 
@@ -69,6 +69,14 @@ class SingleProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = ['id', 'name', 'stock', 'price', 'shipping', 'colors', 'category', 'images', 'featured', 'reviews', 'stars', 'description', 'company']
     
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Allow partial updates (PATCH) without requiring certain fields
+        self.partial = kwargs.get('partial', False)
+        if self.partial:
+            for field_name in ['name', 'stock', 'price', 'category', 'company']:
+                self.fields.pop(field_name)
+
     def get_colors(self, obj):
         return [color.value for color in obj.colors.all()]
     
@@ -87,35 +95,40 @@ class SingleProductSerializer(serializers.ModelSerializer):
         for image_data in images_data:
             image_ = get_or_create_image(image_data)
             ProductImage.objects.create(product=product, image=image_)
-
+    
         product.save()
         return product
     
     def update(self, instance, validated_data):
-        colors_data = validated_data.pop("colors", [])
-        images_data = validated_data.pop("images", [])
-            
-        #  freq_color = dict()
-        # freq_image = dict()
-        # [freq_color.update({str(obj).split()[-1]: 1}) for obj in product.productcolor_set.all()] 
-        # [freq_color.update({str(obj).split()[-1]: 1}) for obj in product.productcolor_set.all()] 
-        
-        instance.colors.clear()
-        for color_data in colors_data:
-            color_obj, created = Color.objects.get_or_create(**color_data)
-            instance.colors.add(color_obj)
-
-        instance.images.clear()
-        for image_data in images_data:
-            image_obj = get_or_create_image(image_data, image_data['width'], image_data['height'], 'image/jpeg')
-            instance.images.add(image_obj)
-        
+        # Override the update method to handle partial updates
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
 
         instance.save()
         return instance
     
+
+class PartialProductSerializer(SingleProductSerializer):
+    def update(self, instance, validated_data):
+        # Override the update method to handle partial updates
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+
+        colors_data = validated_data.pop("colors", [])
+        images_data = validated_data.pop("images", [])
+
+        if 'add_colors' in self.initial_data or 'delete_colors' in self.initial_data:
+            add_colors = self.initial_data.get('add_colors', [])
+            delete_colors = self.initial_data.get('delete_colors', [])
+            instance = add_or_delete(instance, 'colors', add_colors, delete_colors)
+
+        if 'add_images' in self.initial_data or 'delete_images' in self.initial_data:
+            add_images = self.initial_data.get('add_images', [])
+            delete_images = self.initial_data.get('delete_images', [])
+            instance = add_or_delete(instance, 'images', add_images, delete_images)
+
+        instance.save()
+        return instance
 class ProductSerializer(serializers.ModelSerializer):
     colors = serializers.SerializerMethodField()
     image = serializers.SerializerMethodField(source="images")
