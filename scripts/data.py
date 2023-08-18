@@ -1,6 +1,7 @@
 import random
 import json
-
+# from StoreProductAPI.models import Color, ThumbnailSize, Thumbnail, Image, Product, ProductColor, ProductImage
+# from StoreProductAPI.models import Color, ThumbnailSize, Thumbnail, Image, Product, ProductColor, ProductImage
 def generate_rgb_hex_list(a, b):
     rgb_hex_list = []
     
@@ -107,7 +108,20 @@ product_category = ["Home Decor", "Electronics", "Fashion", "Health & Beauty", "
                      "Tools & Hardware", "Stationery", "Personal Care", "Footwear", "Watches", "Home Improvement", "Cookware", 
                      "Gadgets", "Stationery", "Gifts", "Accessories", "Lifestyle", "Electrical", "Bed & Bath", "Stationery", 
                      "Entertainment", "Home Organization", "Home Cleaning", "Home Textiles", "Cosmetics", "Fashion Accessories", "Pet Care", "DIY Kits"]
+# products = Product.objects.all()
+product_id = ['05e56409-f6ce-4d83-b4c1-fcecfbd6371e', '0c19b568-70ab-47c2-9844-03f45b45fc5a', 
+              '1da4e9f6-e0b9-4c20-8668-4389d3ca1355', '2ecfedc0-7b78-4800-972e-117edd9f4adc', 
+              '302f8315-5784-4838-ad1d-b9b21cdd8314', '30f95257-c3b5-4783-a9f8-7bea6f6b3eb0', 
+              '3995d9dc-c898-4d08-bc61-ddf4853fbc68', '3ee777bf-6a7e-47a5-a1f3-06f9e9cf8a0a', 
+              '42c14be0-64f1-4bee-8bd7-31b10f29d7fa', '48fc0b3c-ac0c-45d1-881c-2866a73a28a2', 
+              '518fe6c2-59d8-4029-aa8b-b00cec96a95d', '8655a5f3-7721-4afd-8152-d4f080be3d84', 
+              '8751a3f0-d9f2-4087-b858-36cb9309ea07', '8fb2d527-50d4-4f11-8929-8787f6b3ef67', 
+              '9658a42e-c401-4600-ba1f-476a4e6e084b', '98718eb8-db8a-4c86-8b02-f6b3974deabf', 
+              '9b1e2e6f-fc53-4ea4-b15c-dab5bff451a4', 'a7107f67-ea6f-4a11-8809-219ff6306f59', 
+              'c48cbf49-0b8d-4209-a9dd-2af9b8c573c6', 'cf056f3a-27c8-45cf-a0c0-fce6fd92fff0', 
+              'e813c460-35be-494c-9d2c-fcee50fb7e4d', 'fe854d54-ebab-4281-b187-4331762c9aa0']
 
+# /store/store-products/<uuid:pk> patch
 product_update_partial = {
     "add_images": add_images,
     "delete_images": delete_images,
@@ -115,8 +129,9 @@ product_update_partial = {
     "delete_colors": delete_colors
 }
 
-# print(json.dumps(product_update_partial))
+print("/store/store-products/<uuid:pk> patch",json.dumps(product_update_partial, indent=5), end='\n\n\n')
 
+# /store/store-products/<uuid:pk> put
 product_update_or_add = {
     "name": random.choice(product_name),
     "price": random.choice(product_price),
@@ -124,5 +139,26 @@ product_update_or_add = {
     "description": random.choice(product_description),
     "category": random.choice(product_category),
 }
+print("/store/store-products/<uuid:pk> put", '\n', json.dumps(product_update_or_add, indent=5), end='\n\n\n')
 
-print(json.dumps(product_update_or_add))
+
+#/store/store-products/ patch
+product_update_partial_2 = {
+    "id": random.choice(product_id),
+    "add_images": add_images,
+    "delete_images": delete_images,
+    "add_colors": add_colors,
+    "delete_colors": delete_colors
+}
+print("/store/store-products/ patch", '\n', json.dumps(product_update_partial_2, indent=5), end='\n\n\n')
+
+#/store/store-products/ put, post
+product_update_or_add_2 = {
+    "id": random.choice(product_id),
+    "name": random.choice(product_name),
+    "price": random.choice(product_price),
+    "company": random.choice(product_company),
+    "description": random.choice(product_description),
+    "category": random.choice(product_category),
+}
+print("/store/store-products/ put, post", '\n', json.dumps(product_update_or_add_2, indent=5), end='\n\n\n')
