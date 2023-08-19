@@ -1,0 +1,27 @@
+{
+    "add_images": [
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRlylhHb85zbbiNRGpGTbQbMSTAHo80RVWkOQ&usqp=CAU",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTiKD-e8gVTgD4iQkbd_dLwoloZZrezKt1IkQ&usqp=CAU",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMIAG8BdpFXEbGJhS2JiBMrqysJ5Rby8mhdg&usqp=CAU",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbsCEOUSzTnjyiiStU-kRmVRJLCQEi1rQdaQ&usqp=CAU"
+    ],
+    "delete_images": [
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTiKD-e8gVTgD4iQkbd_dLwoloZZrezKt1IkQ&usqp=CAU",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRYJ2oM4DJYwTlqzrATnF7HAJ1kAxysg27MjQ&usqp=CAU",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbsCEOUSzTnjyiiStU-kRmVRJLCQEi1rQdaQ&usqp=CAU"
+    ],
+    "add_colors": [
+        "000098",
+        "000059",
+        "000328",
+        "000206",
+        "0002f9"
+    ],
+    "delete_colors": [
+        "00020d",
+        "000211",
+        "00023b",
+        "0002a6",
+        "0002f7"
+    ]
+}

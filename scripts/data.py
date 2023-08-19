@@ -1,5 +1,6 @@
 import random
 import json
+import io
 # from StoreProductAPI.models import Color, ThumbnailSize, Thumbnail, Image, Product, ProductColor, ProductImage
 # from StoreProductAPI.models import Color, ThumbnailSize, Thumbnail, Image, Product, ProductColor, ProductImage
 def generate_rgb_hex_list(a, b):
@@ -121,39 +122,43 @@ product_id = ['05e56409-f6ce-4d83-b4c1-fcecfbd6371e', '0c19b568-70ab-47c2-9844-0
               'c48cbf49-0b8d-4209-a9dd-2af9b8c573c6', 'cf056f3a-27c8-45cf-a0c0-fce6fd92fff0', 
               'e813c460-35be-494c-9d2c-fcee50fb7e4d', 'fe854d54-ebab-4281-b187-4331762c9aa0']
 
-# /store/store-products/<uuid:pk> patch
-product_update_partial = {
+apiendpoints = []
+product_modify = []
+
+url = "# /store/store-products/<uuid:pk> patch"
+product = {
     "add_images": add_images,
     "delete_images": delete_images,
     "add_colors": add_colors,
     "delete_colors": delete_colors
 }
+product_modify.append(product)
+apiendpoints.append(url)
 
-print("/store/store-products/<uuid:pk> patch",json.dumps(product_update_partial, indent=5), end='\n\n\n')
-
-# /store/store-products/<uuid:pk> put
-product_update_or_add = {
+url = "# /store/store-products/<uuid:pk> put"
+product = {
     "name": random.choice(product_name),
     "price": random.choice(product_price),
     "company": random.choice(product_company),
     "description": random.choice(product_description),
     "category": random.choice(product_category),
 }
-print("/store/store-products/<uuid:pk> put", '\n', json.dumps(product_update_or_add, indent=5), end='\n\n\n')
+product_modify.append(product)
+apiendpoints.append(url)
 
-
-#/store/store-products/ patch
-product_update_partial_2 = {
+url = "#/store/store-products/ patch"
+product = {
     "id": random.choice(product_id),
     "add_images": add_images,
     "delete_images": delete_images,
     "add_colors": add_colors,
     "delete_colors": delete_colors
 }
-print("/store/store-products/ patch", '\n', json.dumps(product_update_partial_2, indent=5), end='\n\n\n')
+product_modify.append(product)
+apiendpoints.append(url)
 
-#/store/store-products/ put, post
-product_update_or_add_2 = {
+url = "#/store/store-products/ put, post"
+product = {
     "id": random.choice(product_id),
     "name": random.choice(product_name),
     "price": random.choice(product_price),
@@ -161,4 +166,45 @@ product_update_or_add_2 = {
     "description": random.choice(product_description),
     "category": random.choice(product_category),
 }
-print("/store/store-products/ put, post", '\n', json.dumps(product_update_or_add_2, indent=5), end='\n\n\n')
+product_modify.append(product)
+apiendpoints.append(url)
+
+url = "#/store/store-products/ put"
+product = {
+    "id": random.choice(product_id),
+    "name": random.choice(product_name),
+    "price": random.choice(product_price),
+    "company": random.choice(product_company),
+    "description": random.choice(product_description),
+    "category": random.choice(product_category),
+    "add_images": add_images,
+    "delete_images": delete_images,
+    "add_colors": add_colors,
+    "delete_colors": delete_colors
+}
+product_modify.append(product)
+apiendpoints.append(url)
+
+url = "#/store/store-products/<uuid:pk> put"
+product = {
+    "name": random.choice(product_name),
+    "price": random.choice(product_price),
+    "company": random.choice(product_company),
+    "description": random.choice(product_description),
+    "category": random.choice(product_category),
+    "add_images": add_images,
+    "delete_images": delete_images,
+    "add_colors": add_colors,
+    "delete_colors": delete_colors
+}
+product_modify.append(product)
+apiendpoints.append(url)
+
+flag = ''
+for i in range(len(product_modify)):
+    flag = 'w' if i==0 else 'a'
+    with open('scripts/data.json', flag) as json_file:
+        json.dump({"URL to modify": apiendpoints[i]}, json_file, indent=5)
+        json_file.write('\n')
+        json.dump(product_modify[i], json_file, indent=5)
+        json_file.write("\n\n")

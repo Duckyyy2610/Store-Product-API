@@ -1,0 +1,135 @@
+{
+     "URL to modify": "# /store/store-products/<uuid:pk> patch"
+}
+{
+     "add_images": [
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ041Gpm8K4dVhKcGHUIjwMTlV3ISCZgMVvRg&usqp=CAU"
+     ],
+     "delete_images": [
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTe5yES6ZB-9W8avq31Jp1g2vd1z7eo7GeNqA&usqp=CAU",
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRlylhHb85zbbiNRGpGTbQbMSTAHo80RVWkOQ&usqp=CAU",
+          "https://pgdphurieng.edu.vn/wp-content/uploads/2023/05/minions-rise-of-gru-7.jpg"
+     ],
+     "add_colors": [
+          "000195",
+          "000094",
+          "0000c8",
+          "000320",
+          "00010c"
+     ],
+     "delete_colors": [
+          "000253",
+          "000304"
+     ]
+}
+
+{
+     "URL to modify": "# /store/store-products/<uuid:pk> put"
+}
+{
+     "name": "Room Divider",
+     "price": 29245.97,
+     "company": "InfinityEnterprises",
+     "description": "Nurture creativity and imagination with this meticulously crafted toy or game that sparks joy across generations. Designed to be both entertaining and educational, it encourages interactive play and exploration, fostering a sense of wonder and learning.",
+     "category": "Lifestyle"
+}
+
+{
+     "URL to modify": "#/store/store-products/ patch"
+}
+{
+     "id": "fe854d54-ebab-4281-b187-4331762c9aa0",
+     "add_images": [
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ041Gpm8K4dVhKcGHUIjwMTlV3ISCZgMVvRg&usqp=CAU"
+     ],
+     "delete_images": [
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTe5yES6ZB-9W8avq31Jp1g2vd1z7eo7GeNqA&usqp=CAU",
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRlylhHb85zbbiNRGpGTbQbMSTAHo80RVWkOQ&usqp=CAU",
+          "https://pgdphurieng.edu.vn/wp-content/uploads/2023/05/minions-rise-of-gru-7.jpg"
+     ],
+     "add_colors": [
+          "000195",
+          "000094",
+          "0000c8",
+          "000320",
+          "00010c"
+     ],
+     "delete_colors": [
+          "000253",
+          "000304"
+     ]
+}
+
+{
+     "URL to modify": "#/store/store-products/ put, post"
+}
+{
+     "id": "8fb2d527-50d4-4f11-8929-8787f6b3ef67",
+     "name": "Gaming Chair",
+     "price": 79259.61,
+     "company": "ProdigySystems",
+     "description": "Adorn yourself with timeless elegance by wearing this exquisite piece of jewelry that encapsulates the essence of luxury. Meticulously designed and crafted, it embodies sophistication and grace, making it the perfect accent for any occasion.",
+     "category": "Crafts & Hobbies"
+}
+
+{
+     "URL to modify": "#/store/store-products/ put"
+}
+{
+     "id": "3995d9dc-c898-4d08-bc61-ddf4853fbc68",
+     "name": "Bar Cart",
+     "price": 302463.81,
+     "company": "SpectrumVentures",
+     "description": "Nurture creativity and imagination with this meticulously crafted toy or game that sparks joy across generations. Designed to be both entertaining and educational, it encourages interactive play and exploration, fostering a sense of wonder and learning.",
+     "category": "Watches",
+     "add_images": [
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ041Gpm8K4dVhKcGHUIjwMTlV3ISCZgMVvRg&usqp=CAU"
+     ],
+     "delete_images": [
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTe5yES6ZB-9W8avq31Jp1g2vd1z7eo7GeNqA&usqp=CAU",
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRlylhHb85zbbiNRGpGTbQbMSTAHo80RVWkOQ&usqp=CAU",
+          "https://pgdphurieng.edu.vn/wp-content/uploads/2023/05/minions-rise-of-gru-7.jpg"
+     ],
+     "add_colors": [
+          "000195",
+          "000094",
+          "0000c8",
+          "000320",
+          "00010c"
+     ],
+     "delete_colors": [
+          "000253",
+          "000304"
+     ]
+}
+
+{
+     "URL to modify": "#/store/store-products/<uuid:pk> put"
+}
+{
+     "name": "Chandelier",
+     "price": 932285.66,
+     "company": "AstralEnterprises",
+     "description": "Indulge in a luxurious self-care routine with this premium health and beauty product that pampers your senses and revitalizes your skin. Infused with natural ingredients and advanced formulations, it promises a rejuvenating experience that leaves you feeling refreshed and radiant.",
+     "category": "Watches",
+     "add_images": [
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ041Gpm8K4dVhKcGHUIjwMTlV3ISCZgMVvRg&usqp=CAU"
+     ],
+     "delete_images": [
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTe5yES6ZB-9W8avq31Jp1g2vd1z7eo7GeNqA&usqp=CAU",
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRlylhHb85zbbiNRGpGTbQbMSTAHo80RVWkOQ&usqp=CAU",
+          "https://pgdphurieng.edu.vn/wp-content/uploads/2023/05/minions-rise-of-gru-7.jpg"
+     ],
+     "add_colors": [
+          "000195",
+          "000094",
+          "0000c8",
+          "000320",
+          "00010c"
+     ],
+     "delete_colors": [
+          "000253",
+          "000304"
+     ]
+}
+
