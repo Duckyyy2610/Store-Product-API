@@ -36,10 +36,6 @@ class Image(models.Model):
     def __str__(self):
         return f'{self.filename} + {self.width} + {self.height}'
     
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        self.thumbnail.save()
-    
     def __getitem__(self, key):
         if hasattr(self, key):
             return getattr(self, key)
@@ -69,9 +65,7 @@ class Product(models.Model):
             return getattr(self, key)
         else:
             raise KeyError(f"'{key}' attribute not found")
-        
-    # def save(self, *args, **kwargs):
-    #     super().save(*args, **kwargs)
+ 
 
 class ProductColor(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -89,4 +83,3 @@ class ProductImage(models.Model):
     
 
 
-    

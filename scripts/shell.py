@@ -134,6 +134,8 @@ from django.shortcuts import render, get_object_or_404
 from StoreProductAPI.models import Color, ThumbnailSize, Thumbnail, Image, Product, ProductColor, ProductImage
 from StoreProductAPI.serializers import ColorSerializer, SingleImageSerializer, ImageSerializer, ThumbnailSizeSerializer, ThumbnailSerializer, SingleProductSerializer, ProductSerializer
 
+product_id = [str(product.id) for product in Product.objects.all()]
+image_id = [str(image.id) for image in Image.objects.all()]
 # url_exists = Image.objects.filter(url="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-YMONwPlKxEKXfAzkLl5KIieiIaXFl3eL8g&usqp=CAU").first()
 # image = Image.objects.get(url="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-YMONwPlKxEKXfAzkLl5KIieiIaXFl3eL8g&usqp=CAU")
 # image = get_object_or_404(Image, url="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-YMONwPlKxEKXfAzkLl5KIieiIaXFl3eL8g&usqp=CAU")

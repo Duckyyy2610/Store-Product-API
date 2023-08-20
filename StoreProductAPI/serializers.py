@@ -48,6 +48,7 @@ class SingleImageSerializer(serializers.ModelSerializer):
 
         if url is not None:
             instance.thumbnail = get_or_create_thumbnail(url)
+            instance.thumbnail.save()
         
         instance.save()
         return instance     
@@ -66,39 +67,64 @@ class SingleProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = ['id', 'name', 'stock', 'price', 'shipping', 'colors', 'category', 'images', 'featured', 'reviews', 'stars', 'description', 'company']
-    
-    # def __init__(self, *args, **kwargs):
-    #     super().__init__(*args, **kwargs)
-    #     # Allow partial updates (PATCH) without requiring certain fields
-    #     self.partial = kwargs.get('partial', False)
-    #     if self.partial:
-    #         for field_name in ['name', 'stock', 'price', 'category', 'company']:
-    #             self.fields.pop(field_name)
 
     def get_colors(self, obj):
         return [color.value for color in obj.colors.all()]
     
+    def validate(self, data):
+        super().validate(data)
+        # Include the 'add_images' and 'add_colors' fields in validated_data
+        data['add_images'] = self.initial_data.get('add_images', [])
+        data['add_colors'] = self.initial_data.get('add_colors', [])
+        data['delete_images'] = self.initial_data.get('delete_images', [])
+        data['delete_colors'] = self.initial_data.get('delete_colors', [])
+
+        return data
+
     def create(self, validated_data):
-        colors_data = validated_data.pop('colors', [])
-        images_data = validated_data.pop('images', [])
         
+        """
+        validated_data in create method is different from the update method
+        This behavior can be explained by how DRF handles updates. When you perform a PUT request, 
+        DRF attempts to validate the data by running the validation methods, but it also merges the incoming data with the instance data. 
+        This means that the PUT request data contains all fields for the instance, including the additional fields like add_images, delete_images, etc.,
+        that you're processing in the validate method. Since the fields are being passed to the serializer, 
+        they are still available during the update process even if the validate method is removed.
+
+        The PUT request in DRF effectively does a full update of the instance, 
+        meaning it takes the incoming data and replaces the existing instance data with it. 
+        As a result, if you're not actually using the data processed in the validate method during the update process, 
+        you might not see any issues even if you remove the validate method.
+
+        On the other hand, the POST request doesn't have this merging behavior; it's creating a new instance from scratch. 
+        That's why the validate method is crucial in your case to properly process the additional fields and include them in the data when creating a new instance.
+
+        If you intend to continue using these additional fields for updates and want to ensure their proper handling and validation, 
+        it's recommended to keep the validate method in place. This way, your code will remain consistent and maintainable in both POST and PUT scenarios.
+        """
+
+        add_images = validated_data.pop('add_images', [])
+        delete_images = validated_data.pop('delete_images', [])
+
+        add_colors = validated_data.pop('add_colors', [])
+        delete_colors = validated_data.pop('delete_colors', [])
+
         product = Product.objects.create(**validated_data)
+        product_ = add_or_delete(product, 'images', add_images, delete_images)
+        product_ = add_or_delete(product, 'colors', add_colors, delete_colors)
 
-        
-        for color_data in colors_data:
-            color_ = Color.objects.get_or_create(**color_data)[0]
-            ProductColor.objects.create(product=product, color=color_)
-
-        
-        for image_data in images_data:
-            image_ = get_or_create_image(image_data)
-            ProductImage.objects.create(product=product, image=image_)
-    
         product.save()
         return product
     
     def update(self, instance, validated_data):
-        # Override the update method to handle partial updates
+        add_images = validated_data.pop('add_images', [])
+        delete_images = validated_data.pop('delete_images', [])
+
+        add_colors = validated_data.pop('add_colors', [])
+        delete_colors = validated_data.pop('delete_colors', [])
+        
+        íntance_ = add_or_delete(instance, 'images', add_images, delete_images)
+        instance_ = add_or_delete(instance, 'colors', add_colors, delete_colors)
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
 

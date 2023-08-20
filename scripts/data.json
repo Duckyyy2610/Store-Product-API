@@ -3,23 +3,30 @@
 }
 {
      "add_images": [
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ041Gpm8K4dVhKcGHUIjwMTlV3ISCZgMVvRg&usqp=CAU"
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbsCEOUSzTnjyiiStU-kRmVRJLCQEi1rQdaQ&usqp=CAU",
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTe5yES6ZB-9W8avq31Jp1g2vd1z7eo7GeNqA&usqp=CAU",
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5GuGTdeY8MTGuJ6r2zywehrbVIFlJgMBUsEhiL93phYeeGQidzHPSScixwVprt-KQKZQ&usqp=CAU",
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS73UmP_-lBjG7oBLDBuv6fQDlKtiOa2CrxPA&usqp=CAU",
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS73UmP_-lBjG7oBLDBuv6fQDlKtiOa2CrxPA&usqp=CAU"
      ],
      "delete_images": [
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTe5yES6ZB-9W8avq31Jp1g2vd1z7eo7GeNqA&usqp=CAU",
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRlylhHb85zbbiNRGpGTbQbMSTAHo80RVWkOQ&usqp=CAU",
-          "https://pgdphurieng.edu.vn/wp-content/uploads/2023/05/minions-rise-of-gru-7.jpg"
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRYR8a7PDmL6mGtD6HSZNmQbMwF0mXanru9rZjuNq4O4QiNRkwUgBV7Dfrx7nk46wGzaHY&usqp=CAU",
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS73UmP_-lBjG7oBLDBuv6fQDlKtiOa2CrxPA&usqp=CAU"
      ],
      "add_colors": [
-          "000195",
-          "000094",
-          "0000c8",
-          "000320",
-          "00010c"
+          "000063",
+          "00007e",
+          "000279",
+          "0001a4",
+          "0000e3",
+          "000345"
      ],
      "delete_colors": [
-          "000253",
-          "000304"
+          "000120",
+          "0001b4",
+          "000236",
+          "0003d1",
+          "0000c2"
      ]
 }
 
@@ -27,109 +34,161 @@
      "URL to modify": "# /store/store-products/<uuid:pk> put"
 }
 {
-     "name": "Room Divider",
-     "price": 29245.97,
-     "company": "InfinityEnterprises",
-     "description": "Nurture creativity and imagination with this meticulously crafted toy or game that sparks joy across generations. Designed to be both entertaining and educational, it encourages interactive play and exploration, fostering a sense of wonder and learning.",
-     "category": "Lifestyle"
+     "name": "Folding Table",
+     "price": 256346.53,
+     "company": "VelocityWave",
+     "description": "Indulge in a luxurious self-care routine with this premium health and beauty product that pampers your senses and revitalizes your skin. Infused with natural ingredients and advanced formulations, it promises a rejuvenating experience that leaves you feeling refreshed and radiant.",
+     "category": "Electronics"
 }
 
 {
      "URL to modify": "#/store/store-products/ patch"
 }
 {
-     "id": "fe854d54-ebab-4281-b187-4331762c9aa0",
+     "id": "0c19b568-70ab-47c2-9844-03f45b45fc5a",
      "add_images": [
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ041Gpm8K4dVhKcGHUIjwMTlV3ISCZgMVvRg&usqp=CAU"
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbsCEOUSzTnjyiiStU-kRmVRJLCQEi1rQdaQ&usqp=CAU",
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTe5yES6ZB-9W8avq31Jp1g2vd1z7eo7GeNqA&usqp=CAU",
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5GuGTdeY8MTGuJ6r2zywehrbVIFlJgMBUsEhiL93phYeeGQidzHPSScixwVprt-KQKZQ&usqp=CAU",
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS73UmP_-lBjG7oBLDBuv6fQDlKtiOa2CrxPA&usqp=CAU",
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS73UmP_-lBjG7oBLDBuv6fQDlKtiOa2CrxPA&usqp=CAU"
      ],
      "delete_images": [
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTe5yES6ZB-9W8avq31Jp1g2vd1z7eo7GeNqA&usqp=CAU",
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRlylhHb85zbbiNRGpGTbQbMSTAHo80RVWkOQ&usqp=CAU",
-          "https://pgdphurieng.edu.vn/wp-content/uploads/2023/05/minions-rise-of-gru-7.jpg"
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRYR8a7PDmL6mGtD6HSZNmQbMwF0mXanru9rZjuNq4O4QiNRkwUgBV7Dfrx7nk46wGzaHY&usqp=CAU",
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS73UmP_-lBjG7oBLDBuv6fQDlKtiOa2CrxPA&usqp=CAU"
      ],
      "add_colors": [
-          "000195",
-          "000094",
-          "0000c8",
-          "000320",
-          "00010c"
+          "000063",
+          "00007e",
+          "000279",
+          "0001a4",
+          "0000e3",
+          "000345"
      ],
      "delete_colors": [
-          "000253",
-          "000304"
+          "000120",
+          "0001b4",
+          "000236",
+          "0003d1",
+          "0000c2"
      ]
-}
-
-{
-     "URL to modify": "#/store/store-products/ put, post"
-}
-{
-     "id": "8fb2d527-50d4-4f11-8929-8787f6b3ef67",
-     "name": "Gaming Chair",
-     "price": 79259.61,
-     "company": "ProdigySystems",
-     "description": "Adorn yourself with timeless elegance by wearing this exquisite piece of jewelry that encapsulates the essence of luxury. Meticulously designed and crafted, it embodies sophistication and grace, making it the perfect accent for any occasion.",
-     "category": "Crafts & Hobbies"
 }
 
 {
      "URL to modify": "#/store/store-products/ put"
 }
 {
-     "id": "3995d9dc-c898-4d08-bc61-ddf4853fbc68",
-     "name": "Bar Cart",
-     "price": 302463.81,
-     "company": "SpectrumVentures",
-     "description": "Nurture creativity and imagination with this meticulously crafted toy or game that sparks joy across generations. Designed to be both entertaining and educational, it encourages interactive play and exploration, fostering a sense of wonder and learning.",
-     "category": "Watches",
+     "id": "fe854d54-ebab-4281-b187-4331762c9aa0",
+     "name": "Dining Table",
+     "price": 438783.16,
+     "company": "OmegaInnovate",
+     "description": "Ignite your passion for adventure with this high-performance sports and outdoors equipment that's built to withstand the elements and conquer new horizons. Whether you're a seasoned athlete or a weekend explorer, this gear empowers you to push your limits and embrace the thrill of the outdoors.",
+     "category": "Stationery"
+}
+
+{
+     "URL to modify": "#/store/store-products/ put"
+}
+{
+     "id": "3ee777bf-6a7e-47a5-a1f3-06f9e9cf8a0a",
+     "name": "Bunk Bed",
+     "price": 189270.0,
+     "company": "QuantumStrive",
+     "description": "Savor the ultimate culinary experience with this collection of gourmet food and beverage selections that tantalize your taste buds and transport you to a world of flavor. From delectable treats to exotic blends, each item is a celebration of taste and craftsmanship.",
+     "category": "Gifts",
      "add_images": [
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ041Gpm8K4dVhKcGHUIjwMTlV3ISCZgMVvRg&usqp=CAU"
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbsCEOUSzTnjyiiStU-kRmVRJLCQEi1rQdaQ&usqp=CAU",
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTe5yES6ZB-9W8avq31Jp1g2vd1z7eo7GeNqA&usqp=CAU",
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5GuGTdeY8MTGuJ6r2zywehrbVIFlJgMBUsEhiL93phYeeGQidzHPSScixwVprt-KQKZQ&usqp=CAU",
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS73UmP_-lBjG7oBLDBuv6fQDlKtiOa2CrxPA&usqp=CAU",
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS73UmP_-lBjG7oBLDBuv6fQDlKtiOa2CrxPA&usqp=CAU"
      ],
      "delete_images": [
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTe5yES6ZB-9W8avq31Jp1g2vd1z7eo7GeNqA&usqp=CAU",
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRlylhHb85zbbiNRGpGTbQbMSTAHo80RVWkOQ&usqp=CAU",
-          "https://pgdphurieng.edu.vn/wp-content/uploads/2023/05/minions-rise-of-gru-7.jpg"
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRYR8a7PDmL6mGtD6HSZNmQbMwF0mXanru9rZjuNq4O4QiNRkwUgBV7Dfrx7nk46wGzaHY&usqp=CAU",
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS73UmP_-lBjG7oBLDBuv6fQDlKtiOa2CrxPA&usqp=CAU"
      ],
      "add_colors": [
-          "000195",
-          "000094",
-          "0000c8",
-          "000320",
-          "00010c"
+          "000063",
+          "00007e",
+          "000279",
+          "0001a4",
+          "0000e3",
+          "000345"
      ],
      "delete_colors": [
-          "000253",
-          "000304"
+          "000120",
+          "0001b4",
+          "000236",
+          "0003d1",
+          "0000c2"
      ]
 }
 
 {
-     "URL to modify": "#/store/store-products/<uuid:pk> put"
+     "URL to modify": "#/store/store-products/<uuid:pk> put  #/store/store-products/ post"
 }
 {
-     "name": "Chandelier",
-     "price": 932285.66,
-     "company": "AstralEnterprises",
-     "description": "Indulge in a luxurious self-care routine with this premium health and beauty product that pampers your senses and revitalizes your skin. Infused with natural ingredients and advanced formulations, it promises a rejuvenating experience that leaves you feeling refreshed and radiant.",
-     "category": "Watches",
+     "name": "Bookshelf",
+     "price": 803680.45,
+     "company": "PinnacleInnovations",
+     "description": "Effortlessly simplify your daily routine with this innovative and reliable appliance that streamlines tasks and enhances efficiency. Engineered for convenience, it takes care of household chores, giving you more time to focus on what matters most.",
+     "category": "Gadgets",
      "add_images": [
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ041Gpm8K4dVhKcGHUIjwMTlV3ISCZgMVvRg&usqp=CAU"
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbsCEOUSzTnjyiiStU-kRmVRJLCQEi1rQdaQ&usqp=CAU",
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTe5yES6ZB-9W8avq31Jp1g2vd1z7eo7GeNqA&usqp=CAU",
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5GuGTdeY8MTGuJ6r2zywehrbVIFlJgMBUsEhiL93phYeeGQidzHPSScixwVprt-KQKZQ&usqp=CAU",
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS73UmP_-lBjG7oBLDBuv6fQDlKtiOa2CrxPA&usqp=CAU",
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS73UmP_-lBjG7oBLDBuv6fQDlKtiOa2CrxPA&usqp=CAU"
      ],
      "delete_images": [
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTe5yES6ZB-9W8avq31Jp1g2vd1z7eo7GeNqA&usqp=CAU",
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRlylhHb85zbbiNRGpGTbQbMSTAHo80RVWkOQ&usqp=CAU",
-          "https://pgdphurieng.edu.vn/wp-content/uploads/2023/05/minions-rise-of-gru-7.jpg"
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRYR8a7PDmL6mGtD6HSZNmQbMwF0mXanru9rZjuNq4O4QiNRkwUgBV7Dfrx7nk46wGzaHY&usqp=CAU",
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS73UmP_-lBjG7oBLDBuv6fQDlKtiOa2CrxPA&usqp=CAU"
      ],
      "add_colors": [
-          "000195",
-          "000094",
-          "0000c8",
-          "000320",
-          "00010c"
+          "000063",
+          "00007e",
+          "000279",
+          "0001a4",
+          "0000e3",
+          "000345"
      ],
      "delete_colors": [
-          "000253",
-          "000304"
+          "000120",
+          "0001b4",
+          "000236",
+          "0003d1",
+          "0000c2"
      ]
+}
+
+{
+     "URL to modify": "/store/image-products/ put"
+}
+{
+     "id": "6e169951-ce62-4231-9338-7a74364b8af0",
+     "width": 954,
+     "height": 606,
+     "url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6KBV2ANxkvQxK3LtQDF2SveLUvk5a2OdA_g&usqp=CAU",
+     "type": "image/jpeg"
+}
+
+{
+     "URL to modify": "/store/image-products/ put"
+}
+{
+     "width": 914,
+     "height": 605,
+     "url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQ5ctqhLPNS1IZPUwOxNWMwy52iQyHGYUgKw&usqp=CAU",
+     "type": "image/jpeg"
+}
+
+{
+     "URL to modify": "/store/image-products/<uuid:pk> post"
+}
+{
+     "width": 976,
+     "height": 686,
+     "url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRYJ2oM4DJYwTlqzrATnF7HAJ1kAxysg27MjQ&usqp=CAU",
+     "type": "image/jpeg"
 }
 

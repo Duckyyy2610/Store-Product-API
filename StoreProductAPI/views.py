@@ -57,17 +57,6 @@ def store_products(request):
     
     elif request.method == 'PUT' or request.method == 'PATCH':
         product = get_object_or_404(Product, id=request.data.get('id'))
-
-        add_images = request.data.get('add_images', [])
-        delete_images = request.data.get('delete_images', [])
-        if add_images or delete_images:
-            product = add_or_delete(product, 'images', add_images, delete_images)
-
-        add_colors = request.data.get('add_colors', [])
-        delete_colors = request.data.get('delete_colors', [])
-        if add_colors or delete_colors:
-            product = add_or_delete(product, 'colors', add_colors, delete_colors)
-
         serialized_product_update = None
         if request.method == 'PUT':
             serialized_product_update = SingleProductSerializer(product, data=request.data)
@@ -88,16 +77,6 @@ def single_store_product(request, pk):
         return Response(serialized_product.data, status=status.HTTP_200_OK)
     
     elif request.method == 'PUT' or request.method == 'PATCH':
-        add_images = request.data.get('add_images', [])
-        delete_images = request.data.get('delete_images', [])
-        if add_images or delete_images:
-            product = add_or_delete(product, 'images', add_images, delete_images)
-
-        add_colors = request.data.get('add_colors', [])
-        delete_colors = request.data.get('delete_colors', [])
-        if add_colors or delete_colors:
-            product = add_or_delete(product, 'colors', add_colors, delete_colors)
-
         serialized_product_update = None
         if request.method == 'PUT':
             serialized_product_update = SingleProductSerializer(product, data=request.data)
@@ -151,7 +130,11 @@ def image_products(request):
     
     elif request.method == 'PUT' or request.method == 'PATCH':
         image = get_object_or_404(Image, pk=request.data.get('id'))
-        serialized_image_update = SingleImageSerializer(image, data=request.data)
+        serialized_image_update = None
+        if request.method == 'PUT':
+            serialized_image_update = SingleImageSerializer(image, data=request.data)
+        else:
+            serialized_image_update = SingleImageSerializer(image, data=request.data, partial=True)
         serialized_image_update.is_valid(raise_exception=True)
         serialized_image_update.save()
         return Response(serialized_image_update.data, status=status.HTTP_200_OK)
@@ -165,8 +148,12 @@ def single_image_product(request, pk):
         serialized_image = SingleImageSerializer(image)
         return Response(serialized_image.data, status=status.HTTP_200_OK)
     
-    elif request.method in ['PUT', 'PATCH']:
-        serialized_image_update = SingleImageSerializer(image, data=request.data)
+    elif request.method == 'PUT' or request.method == 'PATCH':
+        serialized_image_update = None
+        if request.method == 'PUT':
+            serialized_image_update = SingleImageSerializer(image, data=request.data)
+        else:
+            serialized_image_update = SingleImageSerializer(image, data=request.data, partial=True)
         serialized_image_update.is_valid(raise_exception=True)
         serialized_image_update.save()
         return Response(serialized_image_update.data, status=status.HTTP_200_OK)
@@ -220,7 +207,7 @@ def single_color(request, pk):
         serialized_image = ColorSerializer(color)
         return Response(serialized_image.data, status=status.HTTP_200_OK)
     
-    elif request.method in ['PUT', 'PATCH']:
+    elif request.method == 'PUT' or request.method == 'PATCH':
         serialized_image_update = ColorSerializer(color, data=request.data)
         serialized_image_update.is_valid(raise_exception=True)
         serialized_image_update.save()
